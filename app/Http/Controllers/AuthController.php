@@ -7,8 +7,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * Class AuthController
+ * @package App\Http\Controllers
+ */
 class AuthController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         $v = Validator::make($request->all(), [
@@ -55,7 +63,9 @@ class AuthController extends Controller
         ], 200);
     }
 
-
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
         $this->guard()->logout();
@@ -64,6 +74,11 @@ class AuthController extends Controller
             'msg' => 'Logged out Successfully.'
         ], 200);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
@@ -72,6 +87,10 @@ class AuthController extends Controller
             'data' => $user
         ]);
     }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function refresh()
     {
         if ($token = $this->guard()->refresh()) {
@@ -87,6 +106,10 @@ class AuthController extends Controller
         }
         return response()->json(['error' => 'refresh_token_error'], 401);
     }
+
+    /**
+     * @return mixed
+     */
     private function guard()
     {
         return Auth::guard();
