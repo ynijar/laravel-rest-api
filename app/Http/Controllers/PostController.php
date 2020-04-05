@@ -73,4 +73,19 @@ class PostController extends ApiController
 
         return $this->successResponseWithData($response, Response::HTTP_OK);
     }
+
+    /**
+     * Destroy the specified resource in storage.
+     *
+     * @param Post $post
+     * @param PostService $postService
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function destroy(Post $post, PostService $postService)
+    {
+        $postService->delete($post);
+
+        return $this->successResponse(Response::HTTP_OK);
+    }
 }

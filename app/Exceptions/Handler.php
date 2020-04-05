@@ -2,11 +2,16 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\Responses;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
 use Throwable;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
+    use Responses;
+
     /**
      * A list of the exception types that are not reported.
      *
@@ -36,6 +41,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Throwable $exception)
     {
+        if ($exception instanceof ModelNotFoundException) {
+            $this->exceptionResponse('Not Found!', Response::HTTP_NOT_FOUND);
+        }
+
         parent::report($exception);
     }
 

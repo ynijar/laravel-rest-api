@@ -119,4 +119,18 @@ class PostService extends Service
 
         return $response;
     }
+
+    /**
+     * Delete model Post
+     *
+     * @param Post $post
+     * @return bool
+     * @throws \Exception
+     */
+    public function delete(Post $post): bool
+    {
+        $post->delete();
+
+        return true;
+    }
 }
