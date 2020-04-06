@@ -58,12 +58,16 @@ class PostService extends Service
      *
      * @param PostRequest $request
      * @return bool
-     * @throws \Throwable
      */
-    public function create(PostRequest $request): bool
+    /**
+     * @param PostRequest $request
+     * @return Post
+     */
+    public function create(PostRequest $request): Post
     {
+        $post = new Post;
+
         try {
-            $post = new Post;
 
             $post->name = $request->name;
             $post->description = $request->description;
@@ -77,7 +81,7 @@ class PostService extends Service
             $this->exceptionResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
-        return true;
+        return $post;
     }
 
     /**

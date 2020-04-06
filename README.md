@@ -2,8 +2,6 @@ laravel-rest-api
 ============================
 
 Simple Rest Api with Laravel Framework 7.4.0
-jwt-auth
-guzzle
 
 Install with Composer
 -------------------
@@ -24,3 +22,7 @@ Create users
 Create jwt secret
 -------------------
     php artisan jwt:secret
+
+Run tests
+-------------------
+    php artisan test
