@@ -34,7 +34,4 @@ Route::group(['middleware' => 'auth:api'], function () {
         'index', 'show', 'store', 'update', 'destroy'
     ]);
 
-    // Data
-    Route::get('post','DataController@postRequest');
-
 });
