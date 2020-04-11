@@ -24,23 +24,23 @@ class PostService extends Service
      */
     public function _list(PostSearchRequest $request): array
     {
-        $posts = Post::where([]);
+        $query = Post::where([]);
 
-        $posts->where(function ($query) use ($request) {
+        $query->where(function ($query) use ($request) {
             $query->orWhere('name', 'like', '%' . $request->search . '%')
                 ->orWhere('description', 'like', '%' . $request->search . '%');
         });
 
-        $countPosts = clone $posts;
+        $queryWithoutLimit = clone $query;
 
-        $posts->limit($request->limit);
-        $posts->offset($request->offset);
+        $query->limit($request->limit);
+        $query->offset($request->offset);
 
-        $response = PostResource::collection($posts->get());
+        $posts = PostResource::collection($query->get());
 
         return [
-            'list' => $response,
-            'listCount' => $countPosts->count(),
+            'list' => $posts,
+            'listCount' => $queryWithoutLimit->count(),
         ];
     }
 
