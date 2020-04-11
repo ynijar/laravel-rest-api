@@ -11,11 +11,11 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 trait Responses
 {
     /**
-     * @param array $data
+     * @param $data
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    public function successResponseWithData(array $data, int $code)
+    public function successResponseWithData($data, int $code)
     {
         return response()->json(['status' => 'success', 'data' => $data], $code);
     }

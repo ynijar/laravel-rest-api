@@ -4,11 +4,11 @@ namespace App\Services;
 
 use App\Http\Requests\PostRequest;
 use App\Http\Requests\PostSearchRequest;
+use App\Http\Resources\PostResource;
 use App\Post;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
 
 /**
  * Class PostService
@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
  */
 class PostService extends Service
 {
-
     /**
      * Get posts with relations by filter
      *
@@ -37,18 +36,10 @@ class PostService extends Service
         $posts->limit($request->limit);
         $posts->offset($request->offset);
 
-        $responses = [];
-
-        /** @var Post $post */
-        foreach ($posts->get() as $post) {
-            $response = $post->toArray();
-            $response['user'] = $post->user->toArray();
-
-            $responses[] = $response;
-        }
+        $response = PostResource::collection($posts->get());
 
         return [
-            'list' => $responses,
+            'list' => $response,
             'listCount' => $countPosts->count(),
         ];
     }
@@ -89,9 +80,9 @@ class PostService extends Service
      *
      * @param PostRequest $request
      * @param Post $post
-     * @return array
+     * @return PostResource
      */
-    public function update(PostRequest $request, Post $post): array
+    public function update(PostRequest $request, Post $post): PostResource
     {
         try {
             DB::beginTransaction();
@@ -107,21 +98,18 @@ class PostService extends Service
             $this->exceptionResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->get($post);
+        return new PostResource($post);
     }
 
     /**
      * Get model Post with relations
      *
      * @param Post $post
-     * @return array
+     * @return PostResource
      */
-    public function get(Post $post): array
+    public function get(Post $post): PostResource
     {
-        $response = $post->toArray();
-        $response['user'] = $post->user->toArray();
-
-        return $response;
+        return new PostResource($post);
     }
 
     /**
