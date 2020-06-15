@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx.Dockerfile
+    ports:
+    - 8098:80
+    links:
+      - app
+    volumes:
+      - ./:/var/www
+  app:
+    build:
+      context: .
+      dockerfile: docker/fpm.Dockerfile
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAG: dev
+    volumes:
+      - ./:/var/www
+    links:
+      - mysql
+  mysql:
+    image: mysql:5.7
+    ports:
+      - 33061:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=laravel
+    volumes:
+    - ./docker/mysql/data:/var/lib/mysql
+
+#в mysql нужен volumes что бы не затирались данные
