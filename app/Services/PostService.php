@@ -36,6 +36,8 @@ class PostService extends Service
         $query->limit($request->limit);
         $query->offset($request->offset);
 
+        $query->with('user');
+
         return [
             'list' => PostResource::collection($query->get()),
             'listCount' => $queryCount,
@@ -60,7 +62,7 @@ class PostService extends Service
     }
 
     /**
-     * Update model Product
+     * Update model Post
      *
      * @param PostRequest $request
      * @param Post $post
@@ -77,7 +79,7 @@ class PostService extends Service
     }
 
     /**
-     * Get model Post with relations
+     * Get model Post
      *
      * @param Post $post
      * @return PostResource
