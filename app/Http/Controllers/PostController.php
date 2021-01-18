@@ -7,6 +7,8 @@ use App\Http\Requests\PostSearchRequest;
 use App\Post;
 use App\Services\PostService;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Throwable;
 
 /**
  * Class PostController
@@ -19,13 +21,12 @@ class PostController extends ApiController
      *
      * @param PostSearchRequest $request
      * @param PostService $postService
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function index(PostSearchRequest $request, PostService $postService)
+    public function index(PostSearchRequest $request, PostService $postService): JsonResponse
     {
-        $request->validated();
         $response = $postService->_list($request);
-        return $this->successResponseWithData($response, Response::HTTP_OK);
+        return $this->successResponseWithData($response);
     }
 
     /**
@@ -33,13 +34,11 @@ class PostController extends ApiController
      *
      * @param PostRequest $request
      * @param PostService $postService
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function store(PostRequest $request, PostService $postService)
+    public function store(PostRequest $request, PostService $postService): JsonResponse
     {
-        $request->validated();
-
         $postService->create($request);
         return $this->successResponse(Response::HTTP_CREATED);
     }
@@ -49,12 +48,12 @@ class PostController extends ApiController
      *
      * @param Post $post
      * @param PostService $postService
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show(Post $post, PostService $postService)
+    public function show(Post $post, PostService $postService): JsonResponse
     {
         $response = $postService->get($post);
-        return $this->successResponseWithData($response, Response::HTTP_OK);
+        return $this->successResponseWithData($response);
     }
 
     /**
@@ -63,15 +62,13 @@ class PostController extends ApiController
      * @param PostRequest $request
      * @param Post $post
      * @param PostService $postService
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function update(PostRequest $request, Post $post, PostService $postService)
+    public function update(PostRequest $request, Post $post, PostService $postService): JsonResponse
     {
-        $request->validated();
         $response = $postService->update($request, $post);
-
-        return $this->successResponseWithData($response, Response::HTTP_OK);
+        return $this->successResponseWithData($response);
     }
 
     /**
@@ -79,13 +76,12 @@ class PostController extends ApiController
      *
      * @param Post $post
      * @param PostService $postService
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Exception
+     * @return JsonResponse
+     * @throws Throwable
      */
-    public function destroy(Post $post, PostService $postService)
+    public function destroy(Post $post, PostService $postService): JsonResponse
     {
         $postService->delete($post);
-
         return $this->successResponse(Response::HTTP_OK);
     }
 }

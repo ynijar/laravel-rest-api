@@ -3,10 +3,12 @@
 namespace App\Exceptions;
 
 use App\Helpers\Responses;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Response;
-use Throwable;
+use App\Reference\Constants;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
+use Illuminate\Http\Response;
 
 class Handler extends ExceptionHandler
 {
@@ -32,33 +34,37 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
+     * Register the exception handling callbacks for the application.
      *
-     * @param  \Throwable  $exception
      * @return void
-     *
-     * @throws \Exception
      */
-    public function report(Throwable $exception)
+    public function register()
     {
-        if ($exception instanceof ModelNotFoundException) {
-            $this->exceptionResponse('Not Found!', Response::HTTP_NOT_FOUND);
-        }
-
-        parent::report($exception);
+        //
     }
 
     /**
-     * Render an exception into an HTTP response.
+     * Return json response for only API 404 error
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $exception
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @throws \Throwable
+     * @param \Illuminate\Http\Request $request
+     * @param Throwable $exception
+     * @return \Illuminate\Http\JsonResponse|Response|\Symfony\Component\HttpFoundation\Response
+     * @throws Throwable
      */
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceof NotFoundHttpException) {
+            $this->exceptionResponse(Constants::ERROR_ACTION_NOT_FOUND, Response::HTTP_NOT_FOUND);
+        }
+
+        if ($exception instanceof ModelNotFoundException) {
+            $this->exceptionResponse(Constants::ERROR_MODEL_NOT_FOUND, Response::HTTP_NOT_FOUND);
+        }
+
+        if ($exception instanceof ApiException) {
+            $this->exceptionResponse($exception->getMessage(), $exception->getCode());
+        }
+
         return parent::render($request, $exception);
     }
 }

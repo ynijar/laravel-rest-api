@@ -6,9 +6,7 @@ use App\Http\Requests\PostRequest;
 use App\Http\Requests\PostSearchRequest;
 use App\Http\Resources\PostResource;
 use App\Post;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * Class PostService
@@ -26,21 +24,21 @@ class PostService extends Service
     {
         $query = Post::where([]);
 
-        $query->where(function ($query) use ($request) {
-            $query->orWhere('name', 'like', '%' . $request->search . '%')
-                ->orWhere('description', 'like', '%' . $request->search . '%');
-        });
+        if ($request->search) {
+            $query->where(function ($query) use ($request) {
+                $query->orWhere('name', 'like', '%' . $request->search . '%')
+                    ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        }
 
-        $queryWithoutLimit = clone $query;
+        $queryCount = $query->count();
 
         $query->limit($request->limit);
         $query->offset($request->offset);
 
-        $posts = PostResource::collection($query->get());
-
         return [
-            'list' => $posts,
-            'listCount' => $queryWithoutLimit->count(),
+            'list' => PostResource::collection($query->get()),
+            'listCount' => $queryCount,
         ];
     }
 
@@ -50,29 +48,15 @@ class PostService extends Service
      * @param PostRequest $request
      * @return bool
      */
-    /**
-     * @param PostRequest $request
-     * @return Post
-     */
-    public function create(PostRequest $request): Post
+    public function create(PostRequest $request): bool
     {
         $post = new Post;
 
-        try {
+        $post->name = $request->name;
+        $post->description = $request->description;
+        $post->user_id = $this->getUser()->id;
 
-            $post->name = $request->name;
-            $post->description = $request->description;
-            $post->user_id = Auth::user()->id;
-
-            $post->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $this->exceptionResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
-
-        return $post;
+        return $post->save();
     }
 
     /**
@@ -84,19 +68,10 @@ class PostService extends Service
      */
     public function update(PostRequest $request, Post $post): PostResource
     {
-        try {
-            DB::beginTransaction();
+        $post->name = $request->name;
+        $post->description = $request->description;
 
-            $post->name = $request->name;
-            $post->description = $request->description;
-
-            $post->save();
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            $this->exceptionResponse($e->getMessage(), Response::HTTP_BAD_REQUEST);
-        }
+        $post->save();
 
         return new PostResource($post);
     }
@@ -117,12 +92,10 @@ class PostService extends Service
      *
      * @param Post $post
      * @return bool
-     * @throws \Exception
+     * @throws Throwable
      */
     public function delete(Post $post): bool
     {
-        $post->delete();
-
-        return true;
+        return $post->delete();
     }
 }

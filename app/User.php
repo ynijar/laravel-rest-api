@@ -9,6 +9,11 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 /**
  * Class User
  * @package App
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property int $role_id
  */
 class User extends Authenticatable implements JWTSubject
 {
@@ -58,7 +63,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }

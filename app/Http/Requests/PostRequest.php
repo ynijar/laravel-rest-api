@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 /**
- * Class ProductRequest
+ * Class PostRequest
  * @package App\Http\Requests
  *
- * @property int $id
  * @property string $name
  * @property string $description
  */
@@ -29,26 +28,9 @@ class PostRequest extends Request
      */
     public function rules()
     {
-        $rules = [
+        return [
             'name' => 'required|string',
             'description' => 'required|string',
         ];
-
-        switch ($this->getMethod()) {
-            case 'POST':
-                return $rules;
-            case 'PUT':
-                return [
-                        'id' => 'required|integer|exists:posts,id',
-                    ] + $rules;
-            case 'DELETE':
-                return [
-                    'id' => 'required|integer|exists:posts,id'
-                ];
-                break;
-            default:
-                return $rules;
-                break;
-        }
     }
 }

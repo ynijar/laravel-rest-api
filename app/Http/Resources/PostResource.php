@@ -2,17 +2,14 @@
 
 namespace App\Http\Resources;
 
-use App\User;
+use App\Post;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class PostResource
  * @package App\Http\Resources
  *
- * @property int $id
- * @property string $name
- * @property string $description
- * @property User $user
+ * @mixin Post
  */
 class PostResource extends JsonResource
 {
@@ -28,7 +25,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'user' => new UserResource($this->user),
+            'user' => new UserResource($this->whenLoaded('user')),
         ];
     }
 }

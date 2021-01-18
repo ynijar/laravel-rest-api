@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder where($value)
+ * @method static \Illuminate\Database\Eloquent\Builder whereIn($column, $values, $boolean = 'and', $not = false)
  * @method static \Illuminate\Database\Eloquent\Builder create($value)
  * @method static \Illuminate\Database\Eloquent\Builder whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder whereUpdatedAt($value)
- * @mixin \Eloquent
+ * @method static \Illuminate\Database\Query\Builder select($columns = ['*'])
  */
 class BaseModel extends Model
 {

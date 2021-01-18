@@ -2,16 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class UserResource
  * @package App\Http\Resources
  *
- * @property int $id
- * @property string $name
- * @property string $email
- * @property int $role_id
+ * @mixin User
  */
 class UserResource extends JsonResource
 {
