@@ -26,3 +26,6 @@ Create jwt secret
 Run tests
 -------------------
     php artisan test
+
+Run CI/CD
+-------------------
