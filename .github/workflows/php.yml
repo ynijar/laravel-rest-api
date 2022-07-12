@@ -20,7 +20,7 @@ jobs:
     - name: Setup PHP with composer v2
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.2'
+        php-version: '7.3.2'
         tools: composer:v2
 
 #    - name: Validate composer.json and composer.lock
@@ -36,7 +36,7 @@ jobs:
 #          ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress --ignore-platform-req=ext-filter
+      run: composer install --prefer-dist --no-progress
 
     # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
     # Docs: https://getcomposer.org/doc/articles/scripts.md
